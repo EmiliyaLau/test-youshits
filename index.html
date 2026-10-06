@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>潜力罗盘 · 个人优势探索</title>
+<style>
+  :root {
+    --bg: #f4f5f9;
+    --card: #ffffff;
+    --primary: #2ea87c;
+    --primary-d: #1f8a63;
+    --primary-l: #e6f6f0;
+    --ink: #1f2233;
+    --ink-2: #4a4f66;
+    --ink-3: #8b8fa3;
+    --line: #e8eaf0;
+    --gold: #f0a020;
+    --green: #34c77b;
+    --red: #ef4b5c;
+    --radius: 16px;
+    --shadow: 0 6px 20px rgba(31,34,51,.06);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg); color: var(--ink);
+    display: flex; justify-content: center;
+    min-height: 100vh; padding: 16px 12px 40px;
+    line-height: 1.6;
+  }
+  #app { width: 100%; max-width: 520px; }
+  .hidden { display: none !important; }
+  .card {
+    background: var(--card); border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: 20px 18px; margin-bottom: 14px;
+  }
+  .hero-title { font-size: 26px; font-weight: 800; line-height: 1.35; margin-bottom: 10px; letter-spacing: -.3px; }
+  .hero-sub { font-size: 14px; color: var(--ink-2); margin-bottom: 22px; }
+  .dim-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 8px; margin-bottom: 22px; }
+  .dim-item {
+    background: var(--primary-l); border-radius: 10px; padding: 10px;
+    font-size: 13px; font-weight: 600; color: var(--primary-d); text-align: center;
+  }
+  .btn {
+    display: block; width: 100%; border: none; border-radius: 12px;
+    padding: 14px; font-size: 15px; font-weight: 700; cursor: pointer;
+    transition: all .18s; font-family: inherit;
+  }
+  .btn-primary { background: var(--primary); color: #fff; }
+  .btn-primary:active { transform: scale(.98); background: var(--primary-d); }
+  .btn-ghost { background: #fff; color: var(--ink-3); border: 1px solid var(--line); }
+  .btn-ghost:active { background: #f5f6fa; }
+
+  .progress-info { display: flex; justify-content: space-between; font-size: 13px; color: var(--ink-3); margin-bottom: 8px; }
+  .progress-bar { height: 7px; background: var(--line); border-radius: 4px; overflow: hidden; margin-bottom: 24px; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg,#5bc9a0,#2ea87c); border-radius: 4px; transition: width .3s; width: 0; }
+  .q-text { font-size: 18px; font-weight: 600; line-height: 1.6; margin-bottom: 20px; min-height: 58px; }
+  .options { display: flex; flex-direction: column; gap: 9px; margin-bottom: 22px; }
+  .option {
+    display: flex; align-items: center; gap: 11px; padding: 13px 15px;
+    border: 1.5px solid var(--line); border-radius: 12px; cursor: pointer;
+    transition: all .16s; font-size: 14.5px;
+  }
+  .option:active { background: #f8f9fc; }
+  .option.selected { border-color: var(--primary); background: var(--primary-l); font-weight: 600; }
+  .option .dot {
+    width: 19px; height: 19px; border-radius: 50%; border: 2px solid #ccd2e0;
+    flex-shrink: 0; position: relative; transition: all .16s;
+  }
+  .option.selected .dot { border-color: var(--primary); background: var(--primary); }
+  .option.selected .dot::after {
+    content: ''; position: absolute; top: 3px; left: 3px;
+    width: 9px; height: 9px; border-radius: 50%; background: #fff;
+  }
+  .nav-row { display: flex; gap: 10px; }
+
+  .score-info { padding: 4px 2px; }
+  .tname { font-size: 21px; font-weight: 800; margin-bottom: 6px; letter-spacing: -.3px; }
+  .kw-tags { font-size: 13px; color: var(--ink-3); margin-bottom: 16px; }
+  .rank-line { display: flex; align-items: center; gap: 8px; padding: 7px 0; font-size: 14px; }
+  .rk-badge {
+    font-size: 11px; background: var(--primary-l); color: var(--primary-d);
+    padding: 2px 8px; border-radius: 6px; font-weight: 700;
+  }
+  .rank-line b { font-weight: 700; }
+  .rk-score { margin-left: auto; color: var(--ink-3); font-size: 13px; }
+  .core-mode {
+    margin-top: 14px; padding: 12px 14px; background: #f4faf7;
+    border-radius: 10px; font-size: 13.5px; line-height: 1.7; color: var(--ink-2);
+  }
+  .core-mode b { display: block; margin-bottom: 4px; color: var(--ink); }
+
+  .sec-head { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+  .sec-title { font-size: 15px; font-weight: 800; display: flex; align-items: center; gap: 6px; }
+  .sec-ico {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 24px; height: 24px; border-radius: 7px;
+    background: var(--primary-l); color: var(--primary-d); font-size: 13px;
+  }
+  .sec-sub { font-size: 12px; color: var(--ink-3); margin-left: auto; }
+
+  .combo-box { background: #f4faf7; border-radius: 12px; padding: 14px; font-size: 13.5px; }
+  .combo-box > b { display: block; margin-bottom: 6px; }
+  .combo-box p { color: var(--ink-2); margin-bottom: 10px; line-height: 1.7; }
+  .fit-row { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin-top: 8px; font-size: 12.5px; }
+  .fit-ok { color: var(--green); font-weight: 700; }
+  .fit-no { color: var(--red); font-weight: 700; }
+  .chip {
+    display: inline-block; background: #fff; border: 1px solid var(--line);
+    padding: 3px 9px; border-radius: 20px; font-size: 12px; color: var(--ink-2);
+  }
+
+  .bar-row { display: flex; align-items: center; gap: 8px; padding: 7px 0; font-size: 13px; }
+  .letter { width: 16px; color: var(--ink-3); font-weight: 700; font-size: 12px; }
+  .nm { width: 60px; font-weight: 600; flex-shrink: 0; }
+  .bar-track { flex: 1; height: 8px; background: var(--line); border-radius: 4px; overflow: hidden; }
+  .bar-track i { display: block; height: 100%; background: linear-gradient(90deg,#5bc9a0,#2ea87c); border-radius: 4px; transition: width .6s; }
+  .sc { width: 22px; text-align: right; font-weight: 700; color: var(--primary-d); }
+  .tg { font-size: 11px; padding: 2px 6px; border-radius: 5px; flex-shrink: 0; width: 68px; text-align: center; }
+  .tg.hi { background: #ffe8e8; color: #d63a4a; }
+  .tg.mid { background: #fff3e0; color: #c47a00; }
+  .tg.lo { background: #f0f1f5; color: #8b8fa3; }
+
+  .type-name-row { margin-bottom: 8px; }
+  .type-name-row .tn { font-size: 18px; font-weight: 800; }
+  .type-skill { margin-top: 10px; font-size: 13.5px; line-height: 1.7; color: var(--ink-2); }
+  .type-skill b { color: var(--ink); }
+  .type-warn {
+    margin-top: 10px; padding: 10px 12px; background: #fff8ed;
+    border-left: 3px solid var(--gold); border-radius: 8px;
+    font-size: 13px; color: #7a5a1f;
+  }
+
+  .quick-cards { display: flex; flex-direction: column; gap: 12px; }
+  .quick-card { background: #f0f9f5; border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+  .quick-head { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
+  .quick-head .e { font-size: 22px; }
+  .quick-head b { display: block; font-size: 14.5px; }
+  .stars { color: var(--gold); font-size: 12px; letter-spacing: 1px; display: block; }
+  .ss { font-size: 11.5px; color: var(--ink-3); }
+  .quick-slogan { font-size: 13px; color: var(--primary-d); font-weight: 600; margin-bottom: 10px; padding: 8px 10px; background: var(--primary-l); border-radius: 8px; }
+  .qc-title { font-size: 12.5px; font-weight: 700; margin: 8px 0 5px; }
+  .qc-title.yes { color: var(--green); }
+  .qc-title.no { color: var(--red); }
+  .qc-ok, .qc-warn { display: inline-block; font-size: 12px; padding: 3px 9px; border-radius: 6px; margin: 2px 4px 2px 0; }
+  .qc-ok { background: #e8f9f0; color: #1a8a52; }
+  .qc-warn { background: #fff0f1; color: #c73a4a; }
+  .qc-more { margin-top: 10px; }
+  .qc-more summary {
+    cursor: pointer; font-size: 13px; color: var(--primary-d); font-weight: 600;
+    list-style: none; padding: 8px 12px; background: var(--primary-l);
+    border-radius: 8px; text-align: center;
+  }
+  .qc-more summary::-webkit-details-marker { display: none; }
+  .qc-more[open] summary { margin-bottom: 10px; }
+  .qc-detail { font-size: 13px; line-height: 1.75; color: var(--ink-2); }
+  .qc-detail p { margin-bottom: 10px; }
+  .d-sec { margin-bottom: 10px; }
+  .d-sec b { display: block; margin-bottom: 5px; color: var(--ink); font-size: 13px; }
+  .d-list { padding-left: 18px; }
+  .d-list li { margin-bottom: 3px; }
+  .syn-row { padding: 6px 10px; background: #fff; border-radius: 8px; margin-bottom: 4px; font-size: 12.5px; border: 1px solid var(--line); }
+  .syn-row b { color: var(--primary-d); }
+  .work-mode { margin-top: 10px; padding: 10px 12px; background: #fff; border-radius: 8px; border: 1px solid var(--line); }
+  .work-mode b { display: block; margin-bottom: 4px; }
+  .work-mode p { font-size: 12.5px; color: var(--ink-2); }
+
+  .grow-one { display: flex; align-items: center; gap: 8px; padding: 9px 0; font-size: 13px; border-bottom: 1px dashed var(--line); }
+  .grow-one:last-child { border-bottom: none; }
+  .grow-one b { width: 60px; flex-shrink: 0; }
+  .g-txt { flex: 1; color: var(--ink-2); font-size: 12.5px; }
+  .grow-one .sc { color: var(--ink-3); }
+
+  .career-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 8px; }
+  .career-cell { background: #f0f9f5; border: 1px solid var(--line); border-radius: 12px; padding: 12px; }
+  .ch { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .ch .rk {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 18px; height: 18px; background: var(--primary); color: #fff;
+    border-radius: 50%; font-size: 11px; font-weight: 700; margin-right: 6px;
+  }
+  .ch b { font-size: 14px; }
+  .ch .stars { font-size: 11px; }
+  .career-cell .why, .career-cell .cd, .career-cell .risk, .career-cell .cs { font-size: 12.5px; color: var(--ink-2); margin: 3px 0; }
+  .career-cell .risk { color: #c47a00; }
+
+  .caution-item { font-size: 13px; padding: 6px 0; border-bottom: 1px dashed var(--line); }
+  .caution-item:last-child { border-bottom: none; }
+  .caution-item b { color: var(--ink); }
+
+  .plan-line { padding: 8px 0; font-size: 13.5px; border-bottom: 1px dashed var(--line); display: flex; gap: 10px; }
+  .plan-line:last-of-type { border-bottom: none; }
+  .plan-line .day { color: var(--primary-d); font-weight: 700; width: 62px; flex-shrink: 0; }
+  .compare-note { margin-top: 10px; padding: 10px 12px; background: #f4faf7; border-radius: 8px; font-size: 12.5px; color: var(--ink-2); }
+
+  .read-tip {
+    background: #fff; border-radius: var(--radius); padding: 14px 16px;
+    font-size: 12.5px; color: var(--ink-3); line-height: 1.75;
+    box-shadow: var(--shadow); margin-bottom: 12px;
+  }
+  .read-tip b { display: block; margin-bottom: 5px; color: var(--ink-2); font-size: 13px; }
+  .read-tip i {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 16px; height: 16px; border-radius: 50%; background: var(--primary-l);
+    color: var(--primary-d); font-style: normal; font-weight: 700;
+    font-size: 11px; margin-right: 5px; vertical-align: middle;
+  }
+  .disclaimer {
+    background: #f8f9fc;
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-size: 11.5px;
+    color: var(--ink-3);
+    line-height: 1.7;
+    margin-bottom: 12px;
+    text-align: center;
+  }
+  .disclaimer b {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--ink-2);
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .rp-foot { text-align: center; font-size: 12px; color: var(--ink-3); margin: 12px 0; }
+  .body-text { font-size: 13px; color: var(--ink-2); line-height: 1.7; }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <section id="screen-home">
+    <div class="card">
+      <h1 class="hero-title">潜力罗盘<br>找到你的优势方向</h1>
+      <p class="hero-sub">通过 50 道题，从 10 个维度了解自己的优势倾向，生成一份职业发展参考。</p>
+      <div class="dim-grid">
+        <div class="dim-item">🗣️ 文字沟通</div>
+        <div class="dim-item">🧠 推理判断</div>
+        <div class="dim-item">🗺️ 视觉构想</div>
+        <div class="dim-item">🧘 内省感知</div>
+        <div class="dim-item">🤝 关系洞察</div>
+        <div class="dim-item">💪 动手实践</div>
+        <div class="dim-item">🎵 音律敏感</div>
+        <div class="dim-item">🌿 环境觉察</div>
+        <div class="dim-item">💡 创意突破</div>
+        <div class="dim-item">🎨 美学品味</div>
+      </div>
+      <button class="btn btn-primary" onclick="startQuiz()">开始探索</button>
+      <p style="font-size:11.5px;color:var(--ink-3);text-align:center;margin-top:12px;line-height:1.6">
+        本工具仅供自我探索参考，不构成专业心理评估或职业建议。
+      </p>
+    </div>
+  </section>
+
+  <section id="screen-quiz" class="hidden">
+    <div class="card">
+      <div class="progress-info">
+        <span id="progressText">第 1 / 50 题</span>
+        <span id="progressPct">0%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="q-text" id="qText"></div>
+      <div class="options" id="options"></div>
+      <div class="nav-row">
+        <button class="btn btn-ghost" id="btnPrev" onclick="prevQ()">上一题</button>
+        <button class="btn btn-primary" id="btnNext" onclick="nextQ()">下一题</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="screen-report" class="hidden">
+    <div id="reportBody"></div>
+    <button class="btn btn-ghost" onclick="resetAll()">重新测试</button>
+  </section>
+
+</div>
+
+<script>
+/* ============================================================
+   1. 题库（按维度顺序存放，每 5 题为一组）
+   ============================================================ */
+const QUESTIONS_RAW = [
+  // 维度0 · 文字沟通
+  "我表达自己的想法时，别人通常能很快明白我的意思。",
+  "读完一篇文章，我能很快说出它主要在讲什么。",
+  "我习惯把想法写下来或讲出来，这样思路会更清楚。",
+  "身边人常说听我说话很舒服、很容易理解。",
+  "解释一个抽象概念时，我常能想到贴切的比喻或例子。",
+  // 维度1 · 推理判断
+  "遇到复杂情况，我习惯先梳理出里面的关键要素。",
+  "我常会想\"为什么这件事会这样\"，而不只停留在表面。",
+  "一堆零散信息摆在我面前，我常能发现它们之间有什么关联。",
+  "做选择时，我会把几个方案的利弊摆出来对比。",
+  "别人常说我善于抓住问题的要害。",
+  // 维度2 · 视觉构想
+  "我能在脑海里把一件东西转个方向，想象它不同角度的样子。",
+  "看地图、示意图或结构图时，我很快就能理解它在表达什么。",
+  "房间或桌面怎么摆更合理，我通常比较有感觉。",
+  "去过一次的地方，我大致能凭记忆画出路线。",
+  "我对物体的构造、部件之间的关系比较感兴趣。",
+  // 维度3 · 内省感知
+  "我能说清楚自己现在心情怎么样、为什么会这样。",
+  "我经常在事后回想自己做过的选择和当时的想法。",
+  "状态不好的时候，我知道做什么能让自己缓过来。",
+  "我对\"自己到底想要什么\"这件事比较清楚。",
+  "我习惯从过往经历中总结出一些对自己的认识。",
+  // 维度4 · 关系洞察
+  "别人还没开口，我有时就能感觉到他情绪不太对。",
+  "朋友跟我倾诉时，我通常能明白他真正在意的是什么。",
+  "到一个陌生的圈子，我一般能比较快地跟大家熟络起来。",
+  "双方争执时，我能理解各自站在什么角度想问题。",
+  "跟不同的人打交道，我会调整自己说话的方式。",
+  // 维度5 · 动手实践
+  "新学的动作（比如舞蹈、球类、手工），我上手比一般人快。",
+  "我对自己身体的灵活度和协调性比较有信心。",
+  "让我实际做一遍，比只听别人讲效果更好。",
+  "我能比较精准地控制自己的动作幅度和节奏。",
+  "我更喜欢边做边学、边动手边琢磨。",
+  // 维度6 · 音律敏感
+  "一首歌听上两三遍，我大概就能哼出它的旋律。",
+  "我能感受到一段音乐里传递的情绪起伏。",
+  "我对声音的高低、快慢、音色变化比较敏感。",
+  "听歌时，我会留意到编曲或演唱里一些很细的处理。",
+  "听过一段旋律或节奏，我能比较准确地复现出来。",
+  // 维度7 · 环境觉察
+  "我常能注意到身边环境里一些细微的变化。",
+  "我对植物、动物或自然现象有种天然的好奇。",
+  "待在大自然里，我会明显感觉整个人放松下来。",
+  "我喜欢观察一件事物随着时间慢慢发生的变化。",
+  "环境里出现异常，我经常是最早察觉到的人之一。",
+  // 维度8 · 创意突破
+  "我常能想到一些别人没往那方面想过的点子。",
+  "遇到条条框框的限制，我反而更有动力找突破口。",
+  "我喜欢把看起来不相关的领域拼在一起，产生新的想法。",
+  "我对未知的领域有比较强的探索欲望。",
+  "与其重复做熟悉的事，我更愿意尝试做出点新东西。",
+  // 维度9 · 美学品味
+  "看到一样东西，我很快能感觉出它\"好看\"还是\"别扭\"。",
+  "颜色、比例、排版这些视觉细节，我平时会格外在意。",
+  "我常会动手调整身边的物品或环境，让它看起来更舒服。",
+  "看到一件优秀的设计作品，我能说出它好在哪里。",
+  "我对\"东西应该长什么样\"有自己的审美标准。"
+];
+
+/* ============================================================
+   2. 题目显示顺序（打乱后）
+   数组里每个数字是原始题目索引，同一维度不连续出现。
+   ============================================================ */
+const SHUFFLED_ORDER = [
+  26, 3, 42, 15, 38, 7, 49, 21, 11, 33,
+  45, 1, 29, 17, 40, 5, 47, 23, 13, 36,
+  30, 9, 44, 19, 2, 35, 27, 12, 46, 31,
+  4, 22, 37, 10, 48, 24, 16, 41, 6, 28,
+  34, 14, 0, 43, 20, 39, 8, 25, 32, 18
+];
+
+/* 组装题目对象：text 是题目内容，dim 是所属维度索引 */
+const QUESTIONS = SHUFFLED_ORDER.map(idx => ({
+  text: QUESTIONS_RAW[idx],
+  dim: Math.floor(idx / 5)
+}));
+
+/* ============================================================
+   3. 维度定义
+   ============================================================ */
+const DIM_KEYS = ["文字沟通","推理判断","视觉构想","内省感知","关系洞察","动手实践","音律敏感","环境觉察","创意突破","美学品味"];
+
+/* ============================================================
+   4. 维度文案库
+   ============================================================ */
+const DIM_DATA = {
+  "文字沟通": {
+    short: "沟通", icon: "🗣️", slogan: "把心里想的说明白，也是一种硬实力。",
+    pros: ["开口就能让人听懂", "善于打比方、举例子", "写东西时逻辑顺、读着舒服"],
+    cons: ["有时语速快过思考", "对说不清楚的人会有点着急"],
+    desc: "你擅长把脑子里复杂的想法，翻译成别人一听就懂的话。不管是面对面聊天、公开讲，还是落到纸上，你都能抓住重点、说得清楚。",
+    features: ["能把复杂的想法讲得有条理", "读书看报时容易抓住主要意思", "喜欢通过说出来或写下来理清思路", "身边的人常夸你表达清楚、听得进去"],
+    exp: ["同事写报告爱找你帮忙润色", "开会时你的发言大家会认真听", "写东西的时候思路越写越通畅"],
+    scenes: ["内容创作与编辑", "培训、演讲与教学", "品牌传播与公关", "文案策划"],
+    advice: ["保持日常输出的习惯，写点什么都行", "刻意练习结构化表达：先说结论，再说理由", "学一点讲故事的方法，让内容更有感染力", "多听别人的反馈，别只顾着说"],
+    workMode: "靠表达影响别人，适合沟通表达型的工作。内容创作、培训教学类岗位更能发挥你的长项。"
+  },
+  "推理判断": {
+    short: "推理", icon: "🧠", slogan: "把乱麻理成线，用推理找到出路。",
+    pros: ["善于拆问题、找规律", "对数字和比例敏感", "容易看出方案里的漏洞"],
+    cons: ["想太久，可能错过动手的时机", "对不讲道理的人容易没耐心"],
+    desc: "你习惯把复杂的事情拆成一块块小问题，再一块块解决。面对一团乱麻的局面，你比别人更快看清里头的结构和因果关系。",
+    features: ["遇到大问题习惯拆成小问题逐个解决", "心算或估算比身边人快", "常能一眼看出别人方案中的破绽", "不把事想明白，不太愿意行动"],
+    exp: ["买东西喜欢先比参数、看评价", "分析事情习惯先列几个要点", "看到不合理的方案会忍不住指出来"],
+    scenes: ["数据分析与决策支持", "方案设计与评审", "流程梳理与优化", "风险预判"],
+    advice: ["给分析设个截止时间，先完成再完美", "主动接下团队里最需要理清思路的活儿", "学点数据分析工具，把优势放大", "练习把结论讲给外行听"],
+    workMode: "用逻辑拆解问题，适合分析判断类工作。数据分析、方案评审类岗位更能发挥你的优势。"
+  },
+  "视觉构想": {
+    short: "构想", icon: "🗺️", slogan: "在脑子里搭模型，把抽象变成立体。",
+    pros: ["走过的路不容易忘", "看图比看字学得快", "摆东西、收纳很有想法"],
+    cons: ["脑中画面清楚，落地时细节容易丢", "纯文字或纯抽象的内容容易走神"],
+    desc: "你善于在脑中摆弄图像、方位和结构。东西怎么放、路怎么走、结构怎么搭，你心里通常很快就有数。",
+    features: ["走过的路线基本能记住", "看地图、图纸比读文字更容易理解", "收拾东西、布置房间很有一套", "能在脑中把物体转角度来想象"],
+    exp: ["整理行李或房间时会研究怎么摆更合适", "看图纸或导航很快就能明白", "能在脑子里预想家具摆进去的效果"],
+    scenes: ["设计与制图", "空间规划与陈列", "可视化表达", "现场调度"],
+    advice: ["把想法先画出来再讨论，效率更高", "主动当团队里的\"可视化\"担当", "学一个设计或绘图工具，让直觉能落地", "关键信息用图示确认，别全靠脑补"],
+    workMode: "靠空间直觉和视觉思维，适合设计规划类工作。设计制图、空间规划类岗位更能发挥你的长项。"
+  },
+  "内省感知": {
+    short: "内省", icon: "🧘", slogan: "看清自己，才能走稳自己的路。",
+    pros: ["能清楚知道自己的状态", "做重要决定前会多想一层", "有压力时还能保持清醒"],
+    cons: ["容易想太多、自我消耗", "节奏上可能跟快团队不太合拍"],
+    desc: "你对自己的情绪、动机和状态有比较清楚的感知。这让你更容易知道自己真正想要什么，也更容易在压力中保持稳定。",
+    features: ["能分清\"心情差\"和\"身体累\"的区别", "面对重要选择时，会先听听内心的声音", "在人群里不太容易随大流", "情绪上来时能意识到\"我现在不对劲\""],
+    exp: ["习惯复盘自己一天的状态", "做决定前会先在心里过一遍", "知道怎么让自己从糟糕状态里缓过来"],
+    scenes: ["深度访谈与教练", "需要稳定的决策岗位", "文化或价值观相关工作", "深度写作与策略思考"],
+    advice: ["保持跟自己对话的习惯，写、走、冥想都行", "在团队里可以当那个\"稳得住\"的人", "学一点心理学或教练技术，把内省变工具", "别让\"想太多\"变成焦虑，给自己划个界"],
+    workMode: "内省能力强，适合需要深度思考的工作。需要稳定的决策、教练类岗位更能发挥你的优势。"
+  },
+  "关系洞察": {
+    short: "洞察", icon: "🤝", slogan: "看得懂人，关系就是你的助力。",
+    pros: ["能读懂话里话外的意思", "容易让人产生信任感", "善于化解分歧、促成共识"],
+    cons: ["太在意别人的感受，容易忽略自己", "容易被别人的情绪拖着走"],
+    desc: "你对别人的情绪和动机比较敏感，也容易跟人建立起信任。你擅长在人与人之间穿针引线，促成理解与合作。",
+    features: ["别人有心事，常第一个找你说", "能听出对方没说出口的意思", "到陌生场合也能比较快融入", "有分歧时能同时看到双方的角度"],
+    exp: ["能察觉到朋友情绪不太对劲", "聊天时会根据对方状态调整话题", "经常有人愿意跟我讲心里话"],
+    scenes: ["客户关系与商务拓展", "团队协作与冲突调解", "用户访谈与需求洞察", "社群运营"],
+    advice: ["主动做那个连接资源、连接人的角色", "分清楚共情和讨好，保护好自己的边界", "把沟通经验整理成方法，方便复用", "给自己留点独处的时间回血"],
+    workMode: "靠理解和连接他人，适合协作沟通类工作。客户关系、团队协作类岗位更能发挥你的长项。"
+  },
+  "动手实践": {
+    short: "实践", icon: "💪", slogan: "动手做，就是你的思考方式。",
+    pros: ["学新动作上手快", "动手比听讲学得更好", "说到做到，落地能力强"],
+    cons: ["开长会的时候容易坐不住", "想得快、做得快，有时忘规划"],
+    desc: "你的身体协调性和动作学习能力比较突出，喜欢在动手中学习。比起干听和干看，自己动手做一遍，对你来说效率更高。",
+    features: ["学新动作比别人快上手", "久坐不动会难受，需要活动", "手工、器械、工具用得比较顺手", "说话时会自然带出肢体语言"],
+    exp: ["学跳舞、打球之类的动作上手比较快", "喜欢动手做东西", "坐久了就想站起来走走"],
+    scenes: ["实操培训与技能教学", "现场执行与活动落地", "运动健身指导", "手工艺制作"],
+    advice: ["能动手就别光看文档", "把规律运动当成正经事", "主动承担执行、落地类的活儿", "动手前先花几分钟过一遍步骤，减少返工"],
+    workMode: "通过身体和动手来学习，适合实操型工作。技能教学、现场执行类岗位更能发挥你的优势。"
+  },
+  "音律敏感": {
+    short: "音律", icon: "🎵", slogan: "对声音的敏感，也是一种天赋。",
+    pros: ["旋律听几遍就能记住", "对音准和节奏很敏感", "容易被音乐带动情绪"],
+    cons: ["在嘈杂的环境里容易分心", "凭感觉居多，技术功底还要补"],
+    desc: "你对音高、节奏和音色比较敏感。音乐是你感受世界、调节情绪的一个重要通道。",
+    features: ["一首歌听几遍就能跟着哼", "能听出别人唱歌或演奏有没有走音", "走路、打字都自带节奏", "情绪容易被音乐带着走"],
+    exp: ["听歌时能记住旋律", "听得出别人唱歌跑没跑调", "做事时有自己的节奏感"],
+    scenes: ["音乐创作与表演", "声音内容与播客", "氛围与现场营造", "音视频制作"],
+    advice: ["把听歌升级成\"拆歌\"，琢磨它的结构", "学一样乐器或音频软件，把感知变成技能", "用音乐帮自己调整状态，建专属歌单", "试试自己创作，哪怕只是一小段"],
+    workMode: "对声音敏感，适合与音乐、声音相关的工作。音乐创作、音频内容类岗位更能发挥你的优势。"
+  },
+  "环境觉察": {
+    short: "觉察", icon: "🌿", slogan: "在细节里读懂自然的语言。",
+    pros: ["对环境里的细微变化很敏感", "在户外更有状态", "观察细致、有耐心"],
+    cons: ["长时间闷在室内状态会下滑", "对纯纸面的工作容易失去兴趣"],
+    desc: "你对自然环境和动植物有细腻的观察力。在真实的世界里，你容易注意到别人忽略的细节和变化。",
+    features: ["喜欢观察天气、植物、动物的变化", "养植物或宠物对你来说不算难", "到户外就会明显放松下来", "常能注意到环境里的微小变化"],
+    exp: ["会留意天气和身边植物的变化", "喜欢去户外待着", "对小动物有天然的兴趣"],
+    scenes: ["自然教育与科普", "户外项目与活动", "生态环保相关", "需要细致观察的研究"],
+    advice: ["养成随手记录观察的习惯", "多争取需要出外勤的工作内容", "状态不好时先去户外充个电", "学点博物知识或摄影，让观察有产出"],
+    workMode: "喜欢观察真实世界，适合与自然、户外相关的工作。自然教育、户外活动类岗位更能发挥你的长项。"
+  },
+  "创意突破": {
+    short: "创意", icon: "💡", slogan: "不满足于标准答案，才能找到更好的解。",
+    pros: ["总想试试新做法", "点子多、联想快", "喜欢从零开始搞点新的"],
+    cons: ["点子多，但落地少", "对重复性的工作容易不耐烦"],
+    desc: "你不喜欢照搬标准答案，总想着\"还有没有别的可能\"。你的大脑善于联想、重组，是团队里那个点子不断的人。",
+    features: ["遇到老问题总想试试别的解法", "点子多，常被说\"脑洞大\"", "喜欢把不相关的领域串起来想", "比起从1到10，更喜欢从0到1"],
+    exp: ["看剧会琢磨它为什么吸引人", "买东西会研究有没有更好的选择", "工作时经常提出不一样的看法"],
+    scenes: ["创意策划与产品创新", "头脑风暴与共创", "从0到1的新业务", "解决开放式问题"],
+    advice: ["给每个点子配一个\"下一步小动作\"", "主动参与新项目、新业务的早期阶段", "学点创新方法（比如设计思维），让点子可复制", "建个灵感库，定期回去翻一翻"],
+    workMode: "喜欢创造新东西，适合从0到1的工作。创意策划、产品创新类岗位更能发挥你的优势。"
+  },
+  "美学品味": {
+    short: "品味", icon: "🎨", slogan: "对美的判断力，本身就是一种竞争力。",
+    pros: ["对配色、排版有感觉", "能说清美和丑差在哪", "在意环境给人的质感"],
+    cons: ["对\"能用但难看\"的东西容忍度低", "审美跑在技能前头，容易有挫败感"],
+    desc: "你对色彩、构图、比例和氛围有比较敏锐的直觉，能判断出\"什么是好的\"，并愿意把这种判断力融入作品和日常。",
+    features: ["对配色、排版有天然的判断", "看到好的设计会忍不住多看两眼", "能说出美和丑具体差在哪里", "很在意自己生活空间的氛围"],
+    exp: ["看到好看的设计会停下来研究", "经常调整房间的布置", "对颜色搭配比较讲究"],
+    scenes: ["视觉设计与品牌", "空间与陈列", "影像与摄影", "产品体验打磨"],
+    advice: ["建一个自己的灵感库，定期整理", "学一个设计工具，让审美能落地成产出", "主动接手团队里\"最后那一层美化\"的活儿", "分清\"必要的品质\"和\"过度的完美主义\""],
+    workMode: "审美直觉强，适合和设计美学相关的工作。视觉设计、空间陈列类岗位更能发挥你的优势。"
+  }
+};
+
+/* ============================================================
+   5. 协同文案字典
+   ============================================================ */
+function synKey(a, b) { return [a, b].sort().join("|"); }
+const SYNERGY = {};
+function addSyn(a, b, text) { SYNERGY[synKey(a, b)] = text; }
+addSyn("推理判断","创意突破", "让点子变得站得住脚");
+addSyn("文字沟通","创意突破", "把创意讲得让人愿意听");
+addSyn("文字沟通","推理判断", "把分析讲得清楚又动听");
+addSyn("内省感知","推理判断", "让判断既有深度又有条理");
+addSyn("内省感知","文字沟通", "把内心想法讲得打动人");
+addSyn("关系洞察","内省感知", "把对人的理解变成长久的判断");
+addSyn("关系洞察","文字沟通", "把对人的理解讲得有感染力");
+addSyn("音律敏感","美学品味", "让美感带上节奏");
+addSyn("视觉构想","美学品味", "让审美变成可触摸的结构");
+addSyn("创意突破","美学品味", "把审美升级成新的方案");
+addSyn("关系洞察","音律敏感", "让人与人之间的沟通更有温度");
+addSyn("音律敏感","文字沟通", "让表达带上节奏和韵律");
+addSyn("视觉构想","音律敏感", "让节奏变成看得见的形状");
+addSyn("环境觉察","视觉构想", "把观察变成结构");
+addSyn("创意突破","环境觉察", "让观察变成新想法");
+addSyn("动手实践","环境觉察", "让观察变成行动力");
+addSyn("动手实践","视觉构想", "让身体感知变成具体结构");
+addSyn("动手实践","推理判断", "让分析落到实际行动");
+addSyn("创意突破","推理判断", "把分析变成新的解法");
+addSyn("环境觉察","推理判断", "让分析贴近真实世界");
+addSyn("创意突破","视觉构想", "让创意变成看得见的模型");
+addSyn("环境觉察","动手实践", "让身体感知连接真实世界");
+addSyn("动手实践","音律敏感", "让动作带上节奏感");
+addSyn("内省感知","音律敏感", "让内在感受带上情绪张力");
+addSyn("内省感知","关系洞察", "让内在洞见温暖到关系里");
+addSyn("创意突破","动手实践", "让创意变成真实行动");
+addSyn("文字沟通","环境觉察", "把观察讲得有感染力");
+addSyn("创意突破","文字沟通", "把点子讲得生动");
+addSyn("美学品味","环境觉察", "让观察呈现出美感");
+addSyn("创意突破","关系洞察", "让对人的理解变成新方案");
+addSyn("美学品味","关系洞察", "让对人的理解更有质感");
+function getSynergy(a, b) {
+  return SYNERGY[synKey(a, b)] || "两个天赋叠加，效果会更有辨识度";
+}
+
+/* ============================================================
+   6. 职业推荐池
+   ============================================================ */
+function careerKey(a, b) { return [a, b].sort().join("|"); }
+const CAREERS = {};
+function addCareer(a, b, list) { CAREERS[careerKey(a, b)] = list; }
+addCareer("环境觉察","美学品味", [
+  { name:"花艺师", stars:"★★★", fit:"花束设计与绿植搭配", risk:"需要审美与耐心", step:"先从花店或培训班入手" },
+  { name:"园艺/景观养护", stars:"★★★", fit:"植物养护与景观营造", risk:"需要植物知识与空间感", step:"从苗圃或园艺公司做起" }
+]);
+addCareer("环境觉察","文字沟通", [
+  { name:"研学/营地导师", stars:"★★★", fit:"带队讲解与自然教育", risk:"需要口才、体力和组织力", step:"从营地或研学机构做起" }
+]);
+addCareer("美学品味","视觉构想", [
+  { name:"电商视觉设计", stars:"★★★★★", fit:"商品主图与详情页", risk:"需要审美与转化意识", step:"从电商公司美工岗位入门" },
+  { name:"UI设计师", stars:"★★★★", fit:"界面布局与视觉呈现", risk:"需要审美与交互逻辑", step:"先用作品集说话" },
+  { name:"视频剪辑", stars:"★★★★", fit:"画面节奏与叙事", risk:"需要审美与节奏感", step:"从短视频剪辑练手" }
+]);
+addCareer("创意突破","推理判断", [
+  { name:"游戏策划", stars:"★★★★★", fit:"玩法设计与关卡规划", risk:"需要系统思维与持续创意", step:"从游戏行业实习开始" },
+  { name:"产品经理", stars:"★★★★", fit:"在用户、技术、商业间权衡", risk:"需要多线程权衡能力", step:"从产品助理切入" }
+]);
+addCareer("创意突破","文字沟通", [
+  { name:"广告/品牌策划", stars:"★★★★★", fit:"创意策略与传播方案", risk:"需要创意与洞察力", step:"从广告公司或甲方市场部起步" }
+]);
+addCareer("创意突破","关系洞察", [
+  { name:"店铺主理人", stars:"★★★★", fit:"选品、运营与经营", risk:"需要经营意识与执行力", step:"从小店或一件代发起步" },
+  { name:"创业合伙人", stars:"★★★", fit:"从0到1搭建业务", risk:"需要承受高不确定性", step:"先做最小可行产品验证" }
+]);
+addCareer("推理判断","文字沟通", [
+  { name:"内容运营", stars:"★★★★", fit:"内容规划与数据复盘", risk:"需要文字功底与数据敏感", step:"从内容编辑或账号运营起步" },
+  { name:"公务员/行政管理", stars:"★★★★", fit:"政策执行与公共事务", risk:"需要规则意识与耐心", step:"通过考试，从基层做起" },
+  { name:"内容审核", stars:"★★★★", fit:"内容合规与质量把关", risk:"需要细致与规则意识", step:"从审核专员做起" }
+]);
+addCareer("推理判断","内省感知", [
+  { name:"数据分析师", stars:"★★★★★", fit:"从数据中提炼结论", risk:"需要长期和数字打交道", step:"先掌握 Excel 进阶 + SQL" },
+  { name:"图书/档案管理", stars:"★★★★★", fit:"文献整理、分类与检索", risk:"需要长期耐心", step:"图书情报相关专业或资格考试" },
+  { name:"财务/会计助理", stars:"★★★★", fit:"日常收支与票据整理", risk:"需要细致与对数字敏感", step:"从财务助理做起" }
+]);
+addCareer("内省感知","文字沟通", [
+  { name:"编辑/校对", stars:"★★★★★", fit:"文字审校与内容把关", risk:"需要文字敏感与耐心", step:"从编辑助理或校对做起" },
+  { name:"自媒体创作者", stars:"★★★★", fit:"把想法做成图文或视频", risk:"需要持续产出", step:"先从一两个平台更新起来" }
+]);
+addCareer("内省感知","关系洞察", [
+  { name:"社会工作者/公益项目", stars:"★★★★★", fit:"支持弱势群体与项目执行", risk:"回报较低、需要强共情", step:"从志愿者或社工机构实习开始" },
+  { name:"人力资源", stars:"★★★★★", fit:"招聘、员工关系与人事", risk:"需要识人和沟通敏感度", step:"从招聘助理做起" }
+]);
+addCareer("关系洞察","文字沟通", [
+  { name:"销售/门店顾问", stars:"★★★★★", fit:"建立信任、促成交易", risk:"需要抗压能力", step:"从销售助理或门店顾问做起" },
+  { name:"教师/讲师", stars:"★★★★★", fit:"把知识讲明白、带得动人", risk:"需要公开表达与互动能力", step:"先从助教或兼职讲师开始" },
+  { name:"保险/理财顾问", stars:"★★★★★", fit:"了解需求、配置方案", risk:"需要沟通力和持续获客", step:"从保险公司培训起步" },
+  { name:"客服/社群运营", stars:"★★★★", fit:"解答咨询、维护用户", risk:"需要耐心与服务意识", step:"从客服专员做起" }
+]);
+addCareer("音律敏感","美学品味", [
+  { name:"音乐教师", stars:"★★★", fit:"音乐理论与演奏教学", risk:"需要音乐功底与教学耐心", step:"从兼职教学开始" },
+  { name:"播客/音频内容", stars:"★★★", fit:"声音内容策划与录制", risk:"需要对声音与叙事敏感", step:"从一档播客起步" }
+]);
+addCareer("音律敏感","关系洞察", [
+  { name:"音乐教师", stars:"★★★★★", fit:"音乐理论与演奏教学", risk:"需要音乐功底与耐心", step:"从兼职教学开始" }
+]);
+addCareer("音律敏感","文字沟通", [
+  { name:"声音主播/播客", stars:"★★★★", fit:"声音内容策划与录制", risk:"需要对声音与叙事敏感", step:"从一档播客或有声书起步" }
+]);
+addCareer("动手实践","视觉构想", [
+  { name:"汽车维修技师", stars:"★★★★", fit:"故障诊断与维修", risk:"需要动手与机械理解", step:"从汽修厂学徒或职校起步" }
+]);
+addCareer("环境觉察","动手实践", [
+  { name:"宠物美容师", stars:"★★★★", fit:"宠物护理与造型", risk:"需要动物亲和与动手", step:"从宠物店学徒或培训起步" },
+  { name:"宠物训练师", stars:"★★★★", fit:"宠物行为引导", risk:"需要动物行为认知与耐心", step:"从行为培训入门" },
+  { name:"厨师/烘焙师", stars:"★★★★", fit:"食材与火候的把控", risk:"需要动手与味觉敏感", step:"从后厨学徒或私房烘焙起步" }
+]);
+addCareer("动手实践","音律敏感", [
+  { name:"瑜伽/舞蹈教练", stars:"★★★★", fit:"身体表达与节奏引导", risk:"需要身体协调与节奏感", step:"从兼职带课积累经验" }
+]);
+addCareer("推理判断","视觉构想", [
+  { name:"软件工程师", stars:"★★★★", fit:"严谨的抽象与代码实现", risk:"需要抽象思维与长时间专注", step:"从一门语言和一个项目练手" },
+  { name:"运维工程师", stars:"★★★★", fit:"保障系统稳定与故障排查", risk:"需要动手排查与逻辑分析", step:"从服务器运维或云平台入门" }
+]);
+
+const FALLBACK_CAREERS = [
+  { name:"产品经理", stars:"★★★★", fit:"在用户、技术、商业间权衡", risk:"需要多线程权衡能力", step:"从产品助理或运营切入" },
+  { name:"内容运营", stars:"★★★★", fit:"内容规划、分发与复盘", risk:"需要文字功底与数据敏感", step:"从内容编辑或账号运营起步" },
+  { name:"平面设计师", stars:"★★★", fit:"海报、品牌视觉与排版", risk:"需要敏锐的审美判断", step:"用作品集说话，先临摹再原创" },
+  { name:"数据分析师", stars:"★★★", fit:"从数据中提炼结论", risk:"需要长期和数字打交道", step:"先掌握 Excel 进阶 + SQL" }
+];
+
+const CAUTIONS = [
+  { name:"出纳/会计助理", why:"需要细致和对数字敏感" },
+  { name:"数据录入", why:"需要耐心与专注" },
+  { name:"内容审核", why:"需要细致与规则意识" },
+  { name:"项目经理", why:"需要多线统筹与推进能力" },
+  { name:"会计/财务", why:"需要对数字高度敏感与严谨" },
+  { name:"仓库管理", why:"需要条理与空间规划" },
+  { name:"软件测试", why:"需要细心与逻辑排查能力" },
+  { name:"汽车维修", why:"需要动手与机械理解力" },
+  { name:"健身教练", why:"需要身体示范与运动能力" },
+  { name:"宠物美容", why:"需要动物亲和与动手能力" },
+  { name:"宠物训练", why:"需要动物行为认知与耐心" },
+  { name:"人力资源", why:"需要识人与沟通敏感度" },
+  { name:"室内设计", why:"需要空间规划与审美能力" },
+  { name:"婚礼策划", why:"需要创意、沟通与审美" },
+  { name:"直播主播", why:"需要高频表达与镜头感染力" },
+  { name:"培训讲师", why:"需要公开表达与现场互动" },
+  { name:"公关/品牌", why:"需要表达与人脉维护" }
+];
+
+/* ============================================================
+   7. 霍兰德代码映射
+   ============================================================ */
+function getHolland(top3) {
+  const set = new Set(top3);
+  const typeNames = { "A":"艺术型", "R":"现实型", "I":"研究型", "S":"社会型", "E":"企业型", "C":"常规型" };
+  const typeDesc = {
+    "A":"艺术型：创意表达、自由创作、偏好非结构化的工作",
+    "R":"现实型：动手实践、操作工具、偏好具体任务",
+    "I":"研究型：思考分析、探索原理、偏好研究式工作",
+    "S":"社会型：助人合作、沟通教导、偏好服务与协作",
+    "E":"企业型：影响他人、推动落地、偏好组织与决策",
+    "C":"常规型：规则清晰、流程稳定、偏好有序与结构化"
+  };
+  let codes = [];
+  if (set.has("创意突破") || set.has("美学品味") || set.has("音律敏感")) codes.push("A");
+  if (set.has("动手实践") || set.has("环境觉察") || set.has("视觉构想")) codes.push("R");
+  if (set.has("推理判断") || set.has("环境觉察")) codes.push("I");
+  if (set.has("关系洞察") || set.has("内省感知")) codes.push("S");
+  if (set.has("关系洞察") || set.has("创意突破")) codes.push("E");
+  if (set.has("推理判断") || set.has("内省感知")) codes.push("C");
+  codes = [...new Set(codes)].slice(0, 3);
+  while (codes.length < 3) codes.push("A");
+  return {
+    code: codes.map(c => typeNames[c]).join(" + "),
+    desc: codes.map(c => typeDesc[c]).join("；")
+  };
+}
+
+/* ============================================================
+   8. 成长空间建议
+   ============================================================ */
+const GROW_ADVICE = {
+  "文字沟通":"表达不是主战场，可以先从\"把话写短\"练起，不必逼自己上台演讲",
+  "推理判断":"逻辑不是强项也没关系，用纸笔或表格把思路外化，或请逻辑强的伙伴帮忙复核",
+  "视觉构想":"空间感不必硬补，先从画简单的图示或草图开始",
+  "内省感知":"不习惯内省也没关系，从每天记一件自己的心情小事开始",
+  "关系洞察":"社交不是主场，试试一对一深聊，比在大场合应酬更适合你",
+  "动手实践":"身体协调不是核心优势，从每天10分钟拉伸或散步开始就够",
+  "音律敏感":"音乐感知不是主战场，可以从喜欢的歌单里放松下来",
+  "环境觉察":"自然观察不是强项也没关系，多出去走走就能慢慢补上",
+  "创意突破":"创造力不是核心优势，可以试试\"每天想一个小改变\"",
+  "美学品味":"审美不是主场，先从整理自己的桌面和空间入手"
+};
+
+/* ============================================================
+   9. 类型名生成规则
+   ============================================================ */
+function genTypeName(top3) {
+  const a = DIM_DATA[top3[0]].short;
+  const b = DIM_DATA[top3[1]].short;
+  return a + b + "型";
+}
+function genKeywords(top3) {
+  return top3.map(d => DIM_DATA[d].short).join(" · ");
+}
+
+/* ============================================================
+   10. 分档
+   ============================================================ */
+function getTier(score) {
+  if (score >= 20) return { label: "突出潜能", cls: "hi", stars: "★★★★★" };
+  if (score >= 16) return { label: "较明显优势", cls: "mid", stars: "★★★★☆" };
+  if (score >= 12) return { label: "一般倾向", cls: "lo", stars: "★★★☆☆" };
+  return { label: "当前表现较弱", cls: "lo", stars: "★★☆☆☆" };
+}
+
+/* ============================================================
+   11. 状态管理
+   ============================================================ */
+const OPTIONS = ["非常不像我","不太像我","一般 / 不确定","比较像我","非常像我"];
+const TOTAL = QUESTIONS.length;
+let answers = new Array(TOTAL).fill(null);
+let current = 0;
+
+(function load() {
+  const saved = localStorage.getItem('potential_compass_v1');
+  if (saved) {
+    try { const arr = JSON.parse(saved); if (Array.isArray(arr) && arr.length === TOTAL) answers = arr; } catch(e){}
+  }
+})();
+
+function show(id) {
+  ['screen-home','screen-quiz','screen-report'].forEach(s => {
+    document.getElementById(s).classList.toggle('hidden', s !== id);
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function startQuiz() {
+  const firstUnanswered = answers.findIndex(a => a === null);
+  current = firstUnanswered === -1 ? 0 : firstUnanswered;
+  show('screen-quiz');
+  renderQ();
+}
+function renderQ() {
+  document.getElementById('qText').textContent = QUESTIONS[current].text;
+  const pct = Math.round(((current + 1) / TOTAL) * 100);
+  document.getElementById('progressText').textContent = `第 ${current + 1} / ${TOTAL} 题`;
+  document.getElementById('progressPct').textContent = `${pct}%`;
+  document.getElementById('progressFill').style.width = `${pct}%`;
+
+  const wrap = document.getElementById('options');
+  wrap.innerHTML = '';
+  OPTIONS.forEach((label, idx) => {
+    const div = document.createElement('div');
+    div.className = 'option' + (answers[current] === idx + 1 ? ' selected' : '');
+    div.innerHTML = `<span class="dot"></span><span>${label}</span>`;
+    div.onclick = () => { answers[current] = idx + 1; saveProgress(); renderQ(); };
+    wrap.appendChild(div);
+  });
+  document.getElementById('btnPrev').style.visibility = current === 0 ? 'hidden' : 'visible';
+  document.getElementById('btnNext').textContent = current === TOTAL - 1 ? '生成报告' : '下一题';
+}
+function prevQ() { if (current > 0) { current--; renderQ(); } }
+function nextQ() {
+  if (answers[current] === null) { alert('请先选择一个选项'); return; }
+  if (current < TOTAL - 1) { current++; renderQ(); }
+  else finish();
+}
+function saveProgress() { localStorage.setItem('potential_compass_v1', JSON.stringify(answers)); }
+
+/* ============================================================
+   12. 计分（按维度聚合）
+   ============================================================ */
+function calcScores() {
+  const sums = new Array(10).fill(0);
+  QUESTIONS.forEach((q, i) => {
+    sums[q.dim] += answers[i] === null ? 3 : answers[i];
+  });
+  return DIM_KEYS.map((name, i) => ({
+    name, score: sums[i], pct: Math.round((sums[i] - 5) / 20 * 100)
+  }));
+}
+
+function finish() {
+  const answered = answers.filter(a => a !== null).length;
+  if (answered < TOTAL) {
+    if (!confirm(`还有 ${TOTAL - answered} 题未作答，未作答将按"一般"计分。确定生成报告吗？`)) return;
+  }
+  const scores = calcScores();
+  const sorted = [...scores].sort((a, b) => b.score - a.score);
+  const top3 = sorted.slice(0, 3).map(s => s.name);
+  const bottom3 = sorted.slice(-3).map(s => s.name);
+  renderReport(scores, sorted, top3, bottom3);
+  show('screen-report');
+}
+
+function renderReport(scores, sorted, top3, bottom3) {
+  const typeName = genTypeName(top3);
+  const keywords = genKeywords(top3);
+  const holland = getHolland(top3);
+
+  const d1 = DIM_DATA[top3[0]];
+  const coreMode = `${top3[0]}打底、${top3[1]}助攻——${d1.slogan}两个天赋搭在一起，会形成一种不太容易复制的组合优势。`;
+
+  const radarSvg = buildRadar(scores);
+  const fitOk = getFitOk(top3);
+  const fitNo = ["高重复流程岗位", "纯执行类工作", "单一封闭式任务"];
+
+  const typeChips = top3.map(d => `<span class="chip">${DIM_DATA[d].icon} ${d}</span>`).join("");
+  const typeSkill = `你以${top3[0]}为核心，${top3[1]}与${top3[2]}为两翼，组合有辨识度`;
+  const typeWarn = "⚠️ 注意：" + DIM_DATA[top3[0]].cons.join("。") + "。";
+
+  const quickCards = [top3[0], top3[1]].map(d => renderQuickCard(d, scores)).join("");
+
+  const growHtml = bottom3.map(d => {
+    const item = scores.find(s => s.name === d);
+    return `<div class="grow-one"><span>${DIM_DATA[d].icon}</span><b>${d}</b><span class="g-txt">${GROW_ADVICE[d]}</span><span class="sc">${item.score}分</span></div>`;
+  }).join("");
+
+  const careers = getCareers(top3);
+  const careerHtml = careers.map((c, i) => `
+    <div class="career-cell">
+      <div class="ch"><div><span class="rk">${i+1}</span><b>${c.name}</b></div><span class="stars">${c.stars}</span></div>
+      <div class="why">为什么：你的${top3[0]} + ${top3[1]} 组合比较明显</div>
+      <div class="cd">适合：${c.fit}</div>
+      <div class="risk">风险：${c.risk}</div>
+      <div class="cs">第一步：${c.step}</div>
+    </div>
+  `).join("");
+
+  const cautions = pickCautions(scores, 4);
+  const cautionHtml = cautions.map(c => `<div class="caution-item"><b>${c.name}：</b>${c.why}</div>`).join("");
+
+  const html = `
+    <div class="card">
+      <div class="score-info">
+        <div class="tname">🧭 ${typeName}</div>
+        <div class="kw-tags">关键词：${keywords}</div>
+        <div class="top-ranks">
+          ${top3.map((d, i) => {
+            const s = scores.find(x => x.name === d);
+            return `<div class="rank-line"><span class="rk-badge">第${i+1}优势</span><b>${d}</b><span class="rk-score">${s.score}分</span></div>`;
+          }).join("")}
+        </div>
+        <div class="core-mode"><b>你的核心模式：</b><span>"${coreMode}"</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="sec-head"><div class="sec-title"><span class="sec-ico">📊</span>优势能力图谱</div></div>
+      ${radarSvg}
+      <div class="combo-box">
+        <b>你的能力组合特点</b>
+        <p>你不是单项突出型，而是「${top3.join(" + ")}」的组合型。</p>
+        <div class="fit-row"><span class="fit-ok">✔ 更适合</span>${fitOk.map(f => `<span class="chip">${f}</span>`).join("")}</div>
+        <div class="fit-row"><span class="fit-no">✘ 不太适合</span>${fitNo.map(f => `<span class="chip">${f}</span>`).join("")}</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="sec-head"><div class="sec-title"><span class="sec-ico">📋</span>各维度详情</div><span class="sec-sub">按强度排序</span></div>
+      ${sorted.map((s, i) => {
+        const t = getTier(s.score);
+        return `<div class="bar-row">
+          <span class="letter">${i+1}</span><span class="nm">${s.name}</span>
+          <div class="bar-track"><i style="width:${s.pct}%"></i></div>
+          <span class="sc">${s.score}</span><span class="tg ${t.cls}">${t.label}</span>
+        </div>`;
+      }).join("")}
+    </div>
+
+    <div class="card">
+      <div class="sec-head"><div class="sec-title"><span class="sec-ico">🏷️</span>优势类型解读</div><span class="sec-sub">3秒看懂你</span></div>
+      <div class="type-name-row"><span class="tn">${typeName}</span></div>
+      <div>${typeChips}</div>
+      <div class="type-skill"><b>你擅长：</b>${typeSkill}</div>
+      <div class="type-skill"><b>组合打法：</b>${coreMode}</div>
+      <div class="type-warn">${typeWarn}</div>
+    </div>
+
+    <div class="card">
+      <div class="sec-head"><div class="sec-title"><span class="sec-ico" style="background:var(--green);color:#fff">🏆</span>你的核心优势</div><span class="sec-sub">第一、第二维度</span></div>
+      <div class="quick-cards">${quickCards}</div>
+    </div>
+
+    <div class="card">
+      <div class="sec-head"><div class="sec-title"><span class="sec-ico" style="background:var(--green);color:#fff">📈</span>成长空间</div><span class="sec-sub">一句话看懂</span></div>
+      <p class="body-text" style="margin-bottom:4px;font-size:12.5px">这些不必硬补成强项，但了解它们能帮你避开短板陷阱。</p>
+      ${growHtml}
+    </div>
+
+    <div class="card">
+      <div class="sec-head"><div class="sec-title"><span class="sec-ico" style="background:#3b82f6;color:#fff">🎓</span>职业发展参考</div><span class="sec-sub">基于优势的匹配</span></div>
+      <div style="background:#f4faf7;border-radius:12px;padding:12px 14px;margin-bottom:8px">
+        <div style="font-size:13px;font-weight:700;margin-bottom:4px">你的职业兴趣倾向：<span style="color:var(--primary-d);font-size:15px">${holland.code}</span></div>
+        <p style="font-size:12px;color:var(--ink-3)">${holland.desc}</p>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
+        <b style="font-size:14px">💼 推荐职业方向</b><span class="sec-sub">${careers.length}个</span>
+      </div>
+      <div class="career-grid">${careerHtml}</div>
+      <p class="body-text" style="margin-top:12px;font-size:12.5px">小贴士：选工作的时候，不妨多想想哪一类事情，会让你觉得自己的天赋被用上了。</p>
+      <div style="margin-top:14px"><b style="font-size:14px">⚠️ 建议谨慎的方向</b>${cautionHtml}</div>
+    </div>
+
+    <div class="card">
+      <div class="sec-head"><div class="sec-title"><span class="sec-ico" style="background:var(--gold);color:#fff">📅</span>7天职业验证计划</div><span class="sec-sub">别空想，用行动验证</span></div>
+      <div class="plan-line"><span class="day">Day 1</span>挑 3 个感兴趣的方向，标出你已具备的能力</div>
+      <div class="plan-line"><span class="day">Day 2-4</span>找一位从业者聊聊，问问他们遇到过的坑</div>
+      <div class="plan-line"><span class="day">Day 5-7</span>围绕目标方向做一个小作品，发出来看看反馈</div>
+      <div class="compare-note">一周后，你会比现在更清楚"这条路适不适合我"。验证的成本，远小于一头扎进去再后悔。</div>
+    </div>
+
+    <div class="read-tip">
+      <b><i>i</i>阅读提示</b>
+      本报告基于多元智能视角，对你的优势和成长方向做结构化呈现。它不是给你贴标签，而是提供一些决策时可以参照的线索。任何职业选择，都建议结合兴趣、经历和现实机会综合判断。
+    </div>
+    <div class="disclaimer">
+      <b>免责声明</b>
+      本工具仅供自我探索与学习参考，不作为专业心理评估、医学诊断或职业决策的依据。测试结果不构成任何形式的专业建议，如需专业帮助请咨询相关领域的持证人士。
+    </div>
+    <div class="rp-foot">🕐 ${new Date().toLocaleString('zh-CN')} · 潜力罗盘 · 50题版</div>
+  `;
+
+  document.getElementById('reportBody').innerHTML = html;
+  setTimeout(() => {
+    document.querySelectorAll('.bar-track i').forEach(el => {
+      const w = el.style.width; el.style.width = '0';
+      requestAnimationFrame(() => { el.style.width = w; });
+    });
+  }, 50);
+}
+
+/* ============================================================
+   13. 雷达图 SVG
+   ============================================================ */
+function buildRadar(scores) {
+  const cx = 160, cy = 140, R = 95;
+  const N = 10;
+  const angle = i => -Math.PI / 2 + i * 2 * Math.PI / N;
+  const pt = (i, r) => [cx + r * Math.cos(angle(i)), cy + r * Math.sin(angle(i))];
+
+  let grid = "";
+  [0.25, 0.5, 0.75, 1].forEach(scale => {
+    const pts = [];
+    for (let i = 0; i < N; i++) { const [x, y] = pt(i, R * scale); pts.push(`${x.toFixed(1)},${y.toFixed(1)}`); }
+    grid += `<polygon points="${pts.join(' ')}" fill="none" stroke="#d5ede4" stroke-width="1"/>`;
+  });
+  for (let i = 0; i < N; i++) {
+    const [x, y] = pt(i, R);
+    grid += `<line x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="#d5ede4" stroke-width="1"/>`;
+  }
+
+  const dataPts = scores.map((s, i) => {
+    const r = R * Math.max(0.1, s.pct / 100);
+    const [x, y] = pt(i, r);
+    return [x, y];
+  });
+  const dataPoly = dataPts.map(p => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(' ');
+  const dots = dataPts.map(p => `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="3.2" fill="#2ea87c"/>`).join('');
+
+  const labels = scores.map((s, i) => {
+    const [x, y] = pt(i, R + 22);
+    return `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" font-size="9.5" fill="#6b7280">${s.name} ${s.score}</text>`;
+  }).join('');
+
+  return `<svg viewBox="0 0 320 280" style="width:100%;max-width:360px;display:block;margin:0 auto">
+    ${grid}
+    <polygon points="${dataPoly}" fill="rgba(46,168,124,.18)" stroke="#2ea87c" stroke-width="2"/>
+    ${dots}
+    ${labels}
+  </svg>`;
+}
+
+/* ============================================================
+   14. 工具函数
+   ============================================================ */
+function getFitOk(top3) {
+  const pool = [];
+  top3.forEach(d => { (DIM_DATA[d].scenes || []).forEach(s => pool.push(s)); });
+  return [...new Set(pool)].slice(0, 4);
+}
+
+function getCareers(top3) {
+  const pool = [];
+  for (let i = 0; i < top3.length; i++) {
+    for (let j = i + 1; j < top3.length; j++) {
+      const key = careerKey(top3[i], top3[j]);
+      if (CAREERS[key]) pool.push(...CAREERS[key]);
+    }
+  }
+  const seen = new Set();
+  const unique = pool.filter(c => { if (seen.has(c.name)) return false; seen.add(c.name); return true; });
+  for (const f of FALLBACK_CAREERS) {
+    if (unique.length >= 6) break;
+    if (!seen.has(f.name)) { unique.push(f); seen.add(f.name); }
+  }
+  return unique.slice(0, 6);
+}
+
+function pickCautions(scores, n) {
+  const sorted = [...scores].sort((a, b) => a.score - b.score);
+  const bottom = sorted.slice(0, 3).map(s => s.name);
+  const relevant = CAUTIONS.filter(c => {
+    if (bottom.includes("推理判断") && /会计|数据|审核|测试|财务/.test(c.name)) return true;
+    if (bottom.includes("动手实践") && /维修|健身|宠物/.test(c.name)) return true;
+    if (bottom.includes("关系洞察") && /人力|公关|客服/.test(c.name)) return true;
+    if (bottom.includes("视觉构想") && /室内|仓库/.test(c.name)) return true;
+    if (bottom.includes("文字沟通") && /讲师|直播|公关/.test(c.name)) return true;
+    if (bottom.includes("美学品味") && /婚礼|设计/.test(c.name)) return true;
+    return false;
+  });
+  return (relevant.length >= n ? relevant.slice(0, n) : [...relevant, ...CAUTIONS].slice(0, n));
+}
+
+function resetAll() {
+  if (!confirm('确定要清空所有作答记录，重新开始吗？')) return;
+  answers = new Array(TOTAL).fill(null);
+  current = 0;
+  localStorage.removeItem('potential_compass_v1');
+  show('screen-home');
+}
+
+document.addEventListener('keydown', e => {
+  if (document.getElementById('screen-quiz').classList.contains('hidden')) return;
+  if (e.key >= '1' && e.key <= '5') {
+    answers[current] = parseInt(e.key);
+    saveProgress(); renderQ();
+  }
+  if (e.key === 'ArrowLeft') prevQ();
+  if (e.key === 'ArrowRight') nextQ();
+});
+
+/* ============================================================
+   15. 核心优势卡片渲染
+   ============================================================ */
+function renderQuickCard(dim, scores) {
+  const d = DIM_DATA[dim];
+  const item = scores.find(s => s.name === dim);
+  const tier = getTier(item.score);
+  const otherDims = scores.filter(s => s.name !== dim).slice(0, 3).map(s => s.name);
+
+  const synergyHtml = otherDims.slice(0, 2).map(o =>
+    `<div class="syn-row"><b>+ ${o}</b>　${getSynergy(dim, o)}</div>`
+  ).join("");
+
+  const prosHtml = d.pros.map(p => `<span class="qc-ok">${p}</span>`).join("");
+  const consHtml = d.cons.map(c => `<span class="qc-warn">${c}</span>`).join("");
+  const featuresHtml = d.features.map(f => `<li>${f}</li>`).join("");
+  const expHtml = d.exp.map(e => `<li>${e}</li>`).join("");
+  const scenesHtml = d.scenes.map(s => `<span class="chip">${s}</span>`).join("");
+  const adviceHtml = d.advice.map(a => `<li>${a}</li>`).join("");
+
+  return `
+    <div class="quick-card">
+      <div class="quick-head">
+        <div class="e">${d.icon}</div>
+        <div style="flex:1">
+          <b>${dim}</b>
+          <span class="stars">${tier.stars}</span>
+          <span class="ss">${item.score}/25 · ${tier.label}</span>
+        </div>
+      </div>
+      <div class="quick-slogan">${d.slogan}</div>
+      <div class="qc-title yes">你的优势</div>
+      ${prosHtml}
+      <div class="qc-title no">可能卡点</div>
+      ${consHtml}
+      <details class="qc-more">
+        <summary>展开详细分析</summary>
+        <div class="qc-detail">
+          <p>${d.desc}</p>
+          <div class="d-sec"><b>你可能有的特征</b><ul class="d-list">${featuresHtml}</ul></div>
+          <div class="d-sec"><b>你可能有这些经历</b><ul class="d-list">${expHtml}</ul></div>
+          <div class="d-sec"><b>最佳应用场景</b><div style="margin-top:4px">${scenesHtml}</div></div>
+          <div class="d-sec"><b>发挥建议</b><ul class="d-list">${adviceHtml}</ul></div>
+          <div class="d-sec"><b>与其他优势的协同</b>${synergyHtml}</div>
+          <div class="work-mode"><b>💼 你的典型工作模式</b><p>${d.workMode}</p></div>
+        </div>
+      </details>
+    </div>
+  `;
+}
+</script>
+</body>
+</html>
